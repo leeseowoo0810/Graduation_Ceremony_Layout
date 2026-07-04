@@ -22,23 +22,14 @@
             <option value="12">12중대</option>
         </select>
 
-        <input
-            type="text"
-            id="nameInput"
-            placeholder="훈련병 이름">
+        <input type="text" id="nameInput" placeholder="훈련병 이름">
+        <input type="text" id="phoneInput" placeholder="전화번호">
 
-        <input
-            type="text"
-            id="phoneInput"
-            placeholder="전화번호">
-
-        <button id="searchBtn">
-            🔍 검색하기
-        </button>
+        <button id="searchBtn">🔍 검색하기</button>
 
     </div>
 
-    <div id="result" class="result">
+    <div class="result">
 
         <div class="result-header">
             📍 검색 결과
@@ -58,189 +49,31 @@
 
     <div class="company-layout">
 
-    <div class="company-wrapper" id="wrapper12">
-    <h3>12중대</h3>
-    <div class="company-box" id="company12"></div>
-</div>
+        <div class="company-wrapper" id="wrapper12">
+            <h3>12중대</h3>
+            <div class="company-box" id="company12"></div>
+        </div>
 
-<div class="company-wrapper" id="wrapper11">
-    <h3>11중대</h3>
-    <div class="company-box" id="company11"></div>
-</div>
+        <div class="company-wrapper" id="wrapper11">
+            <h3>11중대</h3>
+            <div class="company-box" id="company11"></div>
+        </div>
 
-<div class="company-wrapper" id="wrapper10">
-    <h3>10중대</h3>
-    <div class="company-box" id="company10"></div>
-</div>
+        <div class="company-wrapper" id="wrapper10">
+            <h3>10중대</h3>
+            <div class="company-box" id="company10"></div>
+        </div>
 
-<div class="company-wrapper" id="wrapper9">
-    <h3>9중대</h3>
-    <div class="company-box" id="company9"></div>
-</div>
+        <div class="company-wrapper" id="wrapper9">
+            <h3>9중대</h3>
+            <div class="company-box" id="company9"></div>
+        </div>
 
-
-</div>
-
+    </div>
 
 </div>
 
-<script>
-
-
-document.getElementById("searchBtn")
-    .addEventListener("click", searchPerson);
-
-
-document.getElementById("company")
-    .addEventListener("change", function(){
-
-        clearHighlight();
-
-        const company = this.value;
-
-        if(company){
-
-            const wrapper =
-                document.getElementById(
-                    "wrapper" + company
-                );
-
-            if(wrapper){
-                wrapper.classList.add(
-                    "active-company"
-                );
-            }
-        }
-
-    });
-
-
-
-document.addEventListener("keydown", function(event){
-
-
-    if(event.key === "Enter"){
-        searchPerson();
-    }
-
-
-});
-
-
-function clearHighlight(){
-
-    document
-        .querySelectorAll(".company-wrapper")
-        .forEach(box => {
-            box.classList.remove(
-                "active-company"
-            );
-        });
-
-}
-
-
-
-async function searchPerson(){
-
-
-    const company =
-        document.getElementById("company").value;
-
-
-    const name =
-        document.getElementById("nameInput")
-        .value
-        .trim();
-
-
-    const phone =
-        document.getElementById("phoneInput")
-        .value
-        .trim();
-
-
-    const resultBody =
-        document.querySelector(".result-body");
-
-
-    if(!name || !phone){
-        resultBody.innerHTML =
-            "이름과 전화번호를 입력해주세요.";
-        return;
-    }
-
-
-    try{
-
-
-        const response =
-            await fetch("./data.json");
-
-
-        const soldiers =
-            await response.json();
-
-
-        const found =
-            soldiers.find(x => {
-
-
-                const companyMatch =
-                    !company ||
-                    x.company === company;
-
-
-                return (
-                    companyMatch &&
-                    x.name === name &&
-                    x.phone === phone
-                );
-
-
-            });
-
-        clearHighlight();
-
-        if(found){
-            document.getElementById("company").value =
-                found.company;
-
-            const companyBox =
-    document.getElementById(
-        "wrapper" + found.company
-    );
-
-
-            if(companyBox){
-                companyBox.classList.add(
-                    "active-company"
-                );
-            }
-
-            resultBody.innerHTML = `
-                <strong style="font-size:22px;">
-                    ${found.name}
-                </strong>
-                <br>
-                ${found.company}중대 · 교번 ${found.number}
-                <br>
-                📍 위치 : ${found.position}
-            `;
-        }
-        else{
-            resultBody.innerHTML =
-                "일치하는 훈련병 정보를 찾을 수 없습니다.";
-        }
-    }
-    catch(error){
-        console.error(error);
-        resultBody.innerHTML =
-            "data.json 파일을 불러오지 못했습니다.";
-    }
-}
-</script>
-
+<script src="script.js"></script>
 
 </body>
 </html>
