@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>수료식 배치도 조회</title>
-    <link rel="stylesheet" href="Main.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -58,20 +58,20 @@
 
     <div class="company-layout">
 
-        <div class="company-box">
-            <h3>9중대</h3>
+        <div class="company-box" id="company12">
+            <h3>12중대</h3>
         </div>
 
-        <div class="company-box">
-            <h3>10중대</h3>
-        </div>
-
-        <div class="company-box">
+        <div class="company-box" id="company11">
             <h3>11중대</h3>
         </div>
 
-        <div class="company-box">
-            <h3>12중대</h3>
+        <div class="company-box" id="company10">
+            <h3>10중대</h3>
+        </div>
+
+        <div class="company-box" id="company9">
+            <h3>9중대</h3>
         </div>
 
     </div>
@@ -80,91 +80,166 @@
 
 <script>
 
+
 document.getElementById("searchBtn")
     .addEventListener("click", searchPerson);
 
+
+document.getElementById("company")
+    .addEventListener("change", function(){
+
+
+        clearHighlight();
+
+
+        const company = this.value;
+
+
+        if(company){
+
+
+            const box =
+                document.getElementById(
+                    "company" + company
+                );
+
+
+            if(box){
+                box.classList.add(
+                    "active-company"
+                );
+            }
+        }
+
+
+    });
+
+
 document.addEventListener("keydown", function(event){
+
 
     if(event.key === "Enter"){
         searchPerson();
     }
 
+
 });
+
+
+function clearHighlight(){
+
+
+    document
+        .querySelectorAll(".company-box")
+        .forEach(box => {
+            box.classList.remove(
+                "active-company"
+            );
+        });
+
+
+}
+
 
 async function searchPerson(){
 
+
     const company =
         document.getElementById("company").value;
+
 
     const name =
         document.getElementById("nameInput")
         .value
         .trim();
 
+
     const phone =
         document.getElementById("phoneInput")
         .value
         .trim();
 
+
     const resultBody =
         document.querySelector(".result-body");
 
-    if(!name || !phone){
 
+    if(!name || !phone){
         resultBody.innerHTML =
             "이름과 전화번호를 입력해주세요.";
-
         return;
     }
 
+
     try{
+
 
         const response =
             await fetch("./data.json");
 
+
         const soldiers =
             await response.json();
+
 
         const found =
             soldiers.find(x => {
 
+
                 const companyMatch =
                     !company ||
                     x.company === company;
+
 
                 return (
                     companyMatch &&
                     x.name === name &&
                     x.phone === phone
                 );
+
+
             });
 
+        clearHighlight();
+
         if(found){
+            document.getElementById("company").value =
+                found.company;
+
+            const companyBox =
+                document.getElementById(
+                    "company" + found.company
+                );
+
+            if(companyBox){
+                companyBox.classList.add(
+                    "active-company"
+                );
+            }
 
             resultBody.innerHTML = `
-                <strong>${found.name}</strong><br>
-                ${found.company}중대 · 교번 : ${found.number}  · 📍 위치 : ${found.position}<br>
-                
+                <strong style="font-size:22px;">
+                    ${found.name}
+                </strong>
+                <br>
+                ${found.company}중대 · 교번 ${found.number}
+                <br>
+                📍 위치 : ${found.position}
             `;
-
         }
         else{
-
             resultBody.innerHTML =
                 "일치하는 훈련병 정보를 찾을 수 없습니다.";
         }
-
     }
     catch(error){
-
         console.error(error);
-
         resultBody.innerHTML =
-            "데이터 파일을 불러오지 못했습니다.";
+            "data.json 파일을 불러오지 못했습니다.";
     }
 }
-
 </script>
+
 
 </body>
 </html>
