@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수료식 배치도 조회</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1 class="title">
+        🎓 수료식 배치도
+    </h1>
+
+    <p class="subtitle">
+        훈련병 이름과 전화번호를 입력해주세요
+    </p>
+
+    <div class="search-card">
+
+        <select id="company">
+            <option value="">중대 선택 (선택사항)</option>
+            <option value="9">9중대</option>
+            <option value="10">10중대</option>
+            <option value="11">11중대</option>
+            <option value="12">12중대</option>
+        </select>
+
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="훈련병 이름">
+
+        <input
+            type="text"
+            id="phoneInput"
+            placeholder="전화번호">
+
+        <button id="searchBtn">
+            조회하기
+        </button>
+
+    </div>
+
+    <div class="result-card">
+
+        <div class="result-title">
+            조회 결과
+        </div>
+
+        <div class="result-body">
+            이름과 전화번호를 입력해주세요.
+        </div>
+
+    </div>
+
+    <div class="stage">
+        단상
+    </div>
+
+    <div class="company-layout">
+
+        <div class="company-wrapper" id="wrapper12">
+            <div class="company-name">12중대</div>
+            <div class="company-box" id="company12"></div>
+        </div>
+
+        <div class="company-wrapper" id="wrapper11">
+            <div class="company-name">11중대</div>
+            <div class="company-box" id="company11"></div>
+        </div>
+
+        <div class="company-wrapper" id="wrapper10">
+            <div class="company-name">10중대</div>
+            <div class="company-box" id="company10"></div>
+        </div>
+
+        <div class="company-wrapper" id="wrapper9">
+            <div class="company-name">9중대</div>
+            <div class="company-box" id="company9"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
