@@ -1,0 +1,18 @@
+{
+  "layout": {
+    "9": { "columns": 9, "lines": 20 },
+    "10": { "columns": 9, "lines": 20 },
+    "11": { "columns": 9, "lines": 20 },
+    "12": { "columns": 9, "lines": 20 }
+  },
+
+  "soldiers": [
+    {
+      "company":"9",
+      "number":"001",
+      "name":"이승우",
+      "phone":"123",
+      "position":"4-14"
+    }
+  ]
+}
