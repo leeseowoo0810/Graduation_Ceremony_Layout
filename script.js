@@ -1,23 +1,31 @@
 let data = null;
 
-window.addEventListener("load", async () => {
+window.addEventListener(
+    "load",
+    async () => {
 
-    const response = await fetch("./data.json");
+        const response =
+            await fetch("./data.json");
 
-    data = await response.json();
+        data =
+            await response.json();
 
-    createLayouts();
-
-});
+        createLayouts();
+    }
+);
 
 function createLayouts(){
 
-    const layouts = data.layout;
+    const layouts =
+        data.layout;
 
     for(const company in layouts){
 
-        const columns = layouts[company].columns;
-        const lines = layouts[company].lines;
+        const columns =
+            layouts[company].columns;
+
+        const lines =
+            layouts[company].lines;
 
         const companyBox =
             document.getElementById(
@@ -36,7 +44,8 @@ function createLayouts(){
 
                 seat.className = "seat";
 
-                seat.dataset.company = company;
+                seat.dataset.company =
+                    company;
 
                 seat.dataset.position =
                     `${column}-${line}`;
@@ -45,63 +54,114 @@ function createLayouts(){
                     `${column}-${line}`;
 
                 companyBox.appendChild(seat);
-
             }
-
         }
-
     }
-
 }
 
+// 검색 버튼
 document
-    .getElementById("searchBtn")
-    .addEventListener("click", searchPerson);
+.getElementById("searchBtn")
+.addEventListener(
+    "click",
+    searchPerson
+);
 
+// 엔터 검색
 document
-    .getElementById("company")
-    .addEventListener("change", function(){
+.addEventListener(
+    "keydown",
+    e => {
+
+        if(e.key === "Enter"){
+
+            searchPerson();
+        }
+    }
+);
+
+// 중대 선택 시 하이라이트
+document
+.getElementById("company")
+.addEventListener(
+    "change",
+    function(){
 
         document
-            .querySelectorAll(".company-wrapper")
-            .forEach(x =>
-                x.classList.remove("active-company")
-            );
+        .querySelectorAll(".company-wrapper")
+        .forEach(x =>
+            x.classList.remove(
+                "active-company"
+            )
+        );
 
-        if(this.value){
-
-            document
-                .getElementById(
-                    "wrapper" + this.value
-                )
-                .classList.add("active-company");
+        if(!this.value){
+            return;
         }
 
-    });
+        const target =
+            document.getElementById(
+                "wrapper" + this.value
+            );
 
-document.addEventListener("keydown", e => {
+        if(target){
 
-    if(e.key === "Enter"){
-        searchPerson();
+            target.classList.add(
+                "active-company"
+            );
+
+            target.scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+        }
     }
+);
 
-});
+function clearHighlights(){
+
+    document
+    .querySelectorAll(".seat")
+    .forEach(x =>
+        x.classList.remove(
+            "selected-seat"
+        )
+    );
+
+    document
+    .querySelectorAll(".company-wrapper")
+    .forEach(x =>
+        x.classList.remove(
+            "active-company"
+        )
+    );
+}
 
 function searchPerson(){
 
     const company =
-        document.getElementById("company").value;
+        document
+        .getElementById("company")
+        .value;
 
     const name =
-        document.getElementById("nameInput")
-        .value.trim();
+        document
+        .getElementById("nameInput")
+        .value
+        .trim();
 
     const phone =
-        document.getElementById("phoneInput")
-        .value.trim();
+        document
+        .getElementById("phoneInput")
+        .value
+        .trim();
 
-    const resultBody =
-        document.querySelector(".result-body");
+    const result =
+        document.querySelector(
+            ".result-body"
+        );
+
+    clearHighlights();
 
     const found =
         data.soldiers.find(x => {
@@ -115,38 +175,41 @@ function searchPerson(){
                 x.name === name &&
                 x.phone === phone
             );
-
         });
-
-    document
-        .querySelectorAll(".seat")
-        .forEach(x =>
-            x.classList.remove("selected-seat")
-        );
-
-    document
-        .querySelectorAll(".company-wrapper")
-        .forEach(x =>
-            x.classList.remove("active-company")
-        );
 
     if(!found){
 
-        resultBody.innerHTML =
-            "일치하는 훈련병 정보를 찾을 수 없습니다.";
+        result.innerHTML =
+            "일치하는 정보가 없습니다.";
 
         return;
     }
 
-    document.getElementById("company").value =
-        found.company;
-
+    // 중대 자동 선택
     document
-        .getElementById(
-            "wrapper" + found.company
-        )
-        .classList.add("active-company");
+    .getElementById("company")
+    .value =
+    found.company;
 
+    // 중대 강조
+    const wrapper =
+        document.getElementById(
+            "wrapper" + found.company
+        );
+
+    if(wrapper){
+
+        wrapper.classList.add(
+            "active-company"
+        );
+
+        wrapper.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+    }
+
+    // 좌석 강조
     const seat =
         document.querySelector(
             `[data-company="${found.company}"][data-position="${found.position}"]`
@@ -162,12 +225,20 @@ function searchPerson(){
             behavior:"smooth",
             block:"center"
         });
-
     }
 
-    resultBody.innerHTML = `
-        <strong>${found.name}</strong><br>
-        ${found.company}중대 · 교번 ${found.number}<br>
+    result.innerHTML =
+    `
+    <div style="font-size:24px;font-weight:700;">
+        ${found.name}
+    </div>
+
+    <div>
+        ${found.company}중대 · 교번 ${found.number}
+    </div>
+
+    <div>
         📍 위치 : ${found.position}
+    </div>
     `;
 }
