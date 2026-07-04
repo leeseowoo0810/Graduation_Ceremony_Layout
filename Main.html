@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수료식 배치도 조회</title>
+    <link rel="stylesheet" href="Main.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1 class="title">수료식 배치도 조회</h1>
+
+    <div class="search-box">
+
+        <select id="company">
+            <option value="">중대 선택 (선택사항)</option>
+            <option value="9">9중대</option>
+            <option value="10">10중대</option>
+            <option value="11">11중대</option>
+            <option value="12">12중대</option>
+        </select>
+
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="이름 입력">
+
+        <input
+            type="text"
+            id="phoneInput"
+            placeholder="전화번호 입력">
+
+        <button id="searchBtn">
+            검색
+        </button>
+
+    </div>
+
+    <div id="result" class="result">
+        이름과 전화번호를 입력 후 검색하세요.
+    </div>
+
+</div>
+
+<div class="stage-container">
+    <div class="stage-label">
+        단상
+    </div>
+</div>
+
+<div class="company-layout">
+
+    <div class="company-box" id="company9">
+        <h3>12중대</h3>
+    </div>
+
+    <div class="company-box" id="company10">
+        <h3>11중대</h3>
+    </div>
+
+    <div class="company-box" id="company11">
+        <h3>10중대</h3>
+    </div>
+
+    <div class="company-box" id="company12">
+        <h3>9중대</h3>
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("searchBtn")
+    .addEventListener("click", searchPerson);
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+        searchPerson();
+    }
+
+});
+
+async function searchPerson() {
+
+    const company =
+        document.getElementById("company").value;
+
+    const name =
+        document.getElementById("nameInput")
+        .value
+        .trim();
+
+    const phone =
+        document.getElementById("phoneInput")
+        .value
+        .trim();
+
+    const result =
+        document.getElementById("result");
+
+    if (!name || !phone) {
+
+        result.innerHTML = `
+            <p>
+                이름과 전화번호를 입력해주세요.
+            </p>
+        `;
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch("./data.json");
+
+        const soldiers =
+            await response.json();
+
+        const found =
+            soldiers.find(x => {
+
+                const companyMatch =
+                    !company ||
+                    x.company === company;
+
+                return (
+                    companyMatch &&
+                    x.name === name &&
+                    x.phone === phone
+                );
+            });
+
+        if (found) {
+
+            result.innerHTML = `
+                <h3>검색 결과</h3>
+
+                <p><strong>중대</strong> : ${found.company}중대</p>
+                <p><strong>교번</strong> : ${found.number}</p>
+                <p><strong>이름</strong> : ${found.name}</p>
+                <p><strong>위치 (열-오)</strong> : ${found.position}</p>
+            `;
+
+        } else {
+
+            result.innerHTML = `
+                <p>
+                    일치하는 훈련병 정보를 찾을 수 없습니다.
+                </p>
+            `;
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        result.innerHTML = `
+            <p>
+                data.json 파일을 불러오지 못했습니다.
+            </p>
+        `;
+    }
+}
+
+</script>
+
+</body>
+</html>
