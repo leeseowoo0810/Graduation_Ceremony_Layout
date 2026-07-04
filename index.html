@@ -58,23 +58,29 @@
 
     <div class="company-layout">
 
-        <div class="company-box" id="company12">
-            <h3>12중대</h3>
-        </div>
+    <div class="company-wrapper" id="wrapper12">
+    <h3>12중대</h3>
+    <div class="company-box" id="company12"></div>
+</div>
 
-        <div class="company-box" id="company11">
-            <h3>11중대</h3>
-        </div>
+<div class="company-wrapper" id="wrapper11">
+    <h3>11중대</h3>
+    <div class="company-box" id="company11"></div>
+</div>
 
-        <div class="company-box" id="company10">
-            <h3>10중대</h3>
-        </div>
+<div class="company-wrapper" id="wrapper10">
+    <h3>10중대</h3>
+    <div class="company-box" id="company10"></div>
+</div>
 
-        <div class="company-box" id="company9">
-            <h3>9중대</h3>
-        </div>
+<div class="company-wrapper" id="wrapper9">
+    <h3>9중대</h3>
+    <div class="company-box" id="company9"></div>
+</div>
 
-    </div>
+
+</div>
+
 
 </div>
 
@@ -88,31 +94,26 @@ document.getElementById("searchBtn")
 document.getElementById("company")
     .addEventListener("change", function(){
 
-
         clearHighlight();
-
 
         const company = this.value;
 
-
         if(company){
 
-
-            const box =
+            const wrapper =
                 document.getElementById(
-                    "company" + company
+                    "wrapper" + company
                 );
 
-
-            if(box){
-                box.classList.add(
+            if(wrapper){
+                wrapper.classList.add(
                     "active-company"
                 );
             }
         }
 
-
     });
+
 
 
 document.addEventListener("keydown", function(event){
@@ -128,17 +129,16 @@ document.addEventListener("keydown", function(event){
 
 function clearHighlight(){
 
-
     document
-        .querySelectorAll(".company-box")
+        .querySelectorAll(".company-wrapper")
         .forEach(box => {
             box.classList.remove(
                 "active-company"
             );
         });
 
-
 }
+
 
 
 async function searchPerson(){
@@ -207,9 +207,10 @@ async function searchPerson(){
                 found.company;
 
             const companyBox =
-                document.getElementById(
-                    "company" + found.company
-                );
+    document.getElementById(
+        "wrapper" + found.company
+    );
+
 
             if(companyBox){
                 companyBox.classList.add(
