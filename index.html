@@ -25,24 +25,29 @@
         <input
             type="text"
             id="nameInput"
-            placeholder="이름 입력">
+            placeholder="훈련병 이름">
 
         <input
             type="text"
             id="phoneInput"
-            placeholder="전화번호 입력">
+            placeholder="전화번호">
 
         <button id="searchBtn">
-            검색
+            🔍 검색하기
         </button>
 
     </div>
 
     <div id="result" class="result">
-        <span class="result-title">검색 결과</span>
-        <span class="result-text">
+
+        <div class="result-header">
+            📍 검색 결과
+        </div>
+
+        <div class="result-body">
             이름과 전화번호를 입력 후 검색하세요.
-        </span>
+        </div>
+
     </div>
 
     <div class="stage-container">
@@ -53,19 +58,19 @@
 
     <div class="company-layout">
 
-        <div class="company-box" id="company9">
+        <div class="company-box">
             <h3>9중대</h3>
         </div>
 
-        <div class="company-box" id="company10">
+        <div class="company-box">
             <h3>10중대</h3>
         </div>
 
-        <div class="company-box" id="company11">
+        <div class="company-box">
             <h3>11중대</h3>
         </div>
 
-        <div class="company-box" id="company12">
+        <div class="company-box">
             <h3>12중대</h3>
         </div>
 
@@ -78,15 +83,15 @@
 document.getElementById("searchBtn")
     .addEventListener("click", searchPerson);
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function(event){
 
-    if (event.key === "Enter") {
+    if(event.key === "Enter"){
         searchPerson();
     }
 
 });
 
-async function searchPerson() {
+async function searchPerson(){
 
     const company =
         document.getElementById("company").value;
@@ -101,22 +106,18 @@ async function searchPerson() {
         .value
         .trim();
 
-    const result =
-        document.getElementById("result");
+    const resultBody =
+        document.querySelector(".result-body");
 
-    if (!name || !phone) {
+    if(!name || !phone){
 
-        result.innerHTML = `
-            <span class="result-title">검색 결과</span>
-            <span class="result-text">
-                이름과 전화번호를 입력해주세요.
-            </span>
-        `;
+        resultBody.innerHTML =
+            "이름과 전화번호를 입력해주세요.";
 
         return;
     }
 
-    try {
+    try{
 
         const response =
             await fetch("./data.json");
@@ -138,47 +139,28 @@ async function searchPerson() {
                 );
             });
 
-        if (found) {
+        if(found){
 
-            result.innerHTML = `
-                <span class="result-title">
-                    검색 결과
-                </span>
-
-                <span class="result-text">
-                    ${found.company}중대 |
-                    교번 ${found.number} |
-                    ${found.name} |
-                    위치 ${found.position}
-                </span>
+            resultBody.innerHTML = `
+                <strong>${found.name}</strong><br>
+                ${found.company}중대 · 교번 : ${found.number}  · 📍 위치 : ${found.position}<br>
+                
             `;
 
-        } else {
+        }
+        else{
 
-            result.innerHTML = `
-                <span class="result-title">
-                    검색 결과
-                </span>
-
-                <span class="result-text">
-                    일치하는 훈련병 정보를 찾을 수 없습니다.
-                </span>
-            `;
+            resultBody.innerHTML =
+                "일치하는 훈련병 정보를 찾을 수 없습니다.";
         }
 
-    } catch (error) {
+    }
+    catch(error){
 
         console.error(error);
 
-        result.innerHTML = `
-            <span class="result-title">
-                오류
-            </span>
-
-            <span class="result-text">
-                data.json 파일을 불러오지 못했습니다.
-            </span>
-        `;
+        resultBody.innerHTML =
+            "데이터 파일을 불러오지 못했습니다.";
     }
 }
 
