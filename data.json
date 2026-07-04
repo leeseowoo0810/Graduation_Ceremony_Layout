@@ -1,9 +1,9 @@
 {
   "layout": {
-    "9": { "columns": 4, "lines": 14 },
-    "10": { "columns": 4, "lines": 14 },
-    "11": { "columns": 4, "lines": 14 },
-    "12": { "columns": 4, "lines": 14 }
+    "9": { "columns": 9, "lines": 20 },
+    "10": { "columns": 9, "lines": 20 },
+    "11": { "columns": 9, "lines": 20 },
+    "12": { "columns": 9, "lines": 20 }
   },
 
   "soldiers": [
@@ -12,7 +12,7 @@
       "number":"001",
       "name":"이승우",
       "phone":"123",
-      "position":"2-7"
+      "position":"4-14"
     }
   ]
 }
