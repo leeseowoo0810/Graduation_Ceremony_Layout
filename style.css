@@ -217,7 +217,7 @@ button{
 
     display:flex;
 
-    gap:8px;
+    gap:3px;
 }
 
 .company-wrapper{
@@ -226,7 +226,7 @@ button{
 
     text-align:center;
 
-    padding:8px;
+    padding:2px;
 
     border-radius:20px;
 
