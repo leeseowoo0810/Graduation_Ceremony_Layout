@@ -1,30 +1,18 @@
-[
-  {
-    "company": "9",
-    "number": "001",
-    "name": "이승우",
-    "phone": "123",
-    "position": "1-1"
+{
+  "layout": {
+    "9": { "columns": 4, "lines": 14 },
+    "10": { "columns": 4, "lines": 14 },
+    "11": { "columns": 4, "lines": 14 },
+    "12": { "columns": 4, "lines": 14 }
   },
-  {
-    "company": "10",
-    "number": "002",
-    "name": "구권모",
-    "phone": "123",
-    "position": "14-3"
-  },
-  {
-    "company": "11",
-    "number": "003",
-    "name": "서필산",
-    "phone": "123",
-    "position": "15-1"
-  },
-  {
-    "company": "12",
-    "number": "003",
-    "name": "허찬",
-    "phone": "123",
-    "position": "15-1"
-  }
-]
+
+  "soldiers": [
+    {
+      "company":"9",
+      "number":"001",
+      "name":"이승우",
+      "phone":"123",
+      "position":"4-14"
+    }
+  ]
+}
