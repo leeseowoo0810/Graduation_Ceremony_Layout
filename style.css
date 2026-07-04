@@ -5,12 +5,10 @@
     font-family:"Pretendard",sans-serif;
 }
 
-
 body{
     background:#121212;
     color:white;
 }
-
 
 .container{
     max-width:700px;
@@ -18,24 +16,17 @@ body{
     padding:15px;
 }
 
-
 .title{
     text-align:center;
     font-size:28px;
-    font-weight:700;
     margin-bottom:20px;
 }
-
-
-/* 검색영역 */
-
 
 .search-box{
     display:flex;
     flex-direction:column;
     gap:12px;
 }
-
 
 select,
 input{
@@ -47,36 +38,18 @@ input{
     background:#1f1f1f;
     border:1px solid #333;
     border-radius:12px;
-    outline:none;
 }
-
-
-select:focus,
-input:focus{
-    border-color:#666;
-}
-
 
 button{
-    width:100%;
     height:55px;
-    font-size:18px;
-    font-weight:700;
-    color:white;
-    background:#3a3a3a;
     border:none;
     border-radius:12px;
+    background:#3a3a3a;
+    color:white;
+    font-size:18px;
+    font-weight:700;
     cursor:pointer;
 }
-
-
-button:hover{
-    background:#505050;
-}
-
-
-/* 검색 결과 */
-
 
 .result{
     margin-top:15px;
@@ -85,55 +58,41 @@ button:hover{
     overflow:hidden;
 }
 
-
 .result-header{
     background:#2a2a2a;
-    padding:12px 15px;
-    font-weight:700;
+    padding:12px;
     text-align:center;
+    font-weight:700;
 }
-
 
 .result-body{
-    padding:18px;
-    line-height:1.8;
-    font-size:18px;
+    padding:15px;
     text-align:center;
+    line-height:1.8;
 }
 
-
-/* 단상 */
-
-
 .stage-container{
-    margin-top:20px;
+    margin-top:15px;
     display:flex;
     justify-content:center;
 }
 
-
 .stage-label{
     width:240px;
-    text-align:center;
     background:#EDEDE9;
     color:black;
-    font-size:22px;
-    font-weight:700;
+    text-align:center;
     padding:12px;
     border-radius:12px;
+    font-size:22px;
+    font-weight:700;
 }
-
-
-/* 중대 배치도 */
-
 
 .company-layout{
     margin-top:15px;
     display:flex;
-    justify-content:center;
     gap:8px;
 }
-
 
 .company-wrapper{
     flex:1;
@@ -143,67 +102,58 @@ button:hover{
     transition:.2s;
 }
 
-
 .company-wrapper h3{
     margin-bottom:8px;
-    font-size:18px;
-    font-weight:700;
 }
-
 
 .company-box{
-    height:320px;
+    height:420px;
     background:#EDEDE9;
-    border:1px solid #EDEDE9;
     border-radius:16px;
+    padding:4px;
+    display:grid;
+    gap:3px;
+    overflow-y:auto;
 }
 
-
-/* 선택된 중대 */
-
+.seat{
+    min-height:22px;
+    background:#d6d6d6;
+    color:black;
+    border-radius:4px;
+    font-size:9px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
 .active-company{
     border:3px solid #6CFD33;
-    border-radius:24px;
     background:#444;
-    box-shadow:
-        0 0 12px rgba(108,253,51,.8),
-        0 0 24px rgba(108,253,51,.4);
-    padding:6px;
+    box-shadow:0 0 12px rgba(108,253,51,.8);
 }
-
 
 .active-company h3{
     color:white;
 }
 
+.selected-seat{
+    background:#ff3b30 !important;
+    color:white !important;
+    font-weight:bold;
+}
 
-/* 모바일 */
-
-
-@media (max-width:480px){
-
+@media(max-width:480px){
 
     .title{
         font-size:24px;
     }
 
-
-    .company-layout{
-        gap:6px;
-    }
-
-
-    .company-wrapper h3{
-        font-size:15px;
-    }
-
-
     .company-box{
-        height:360px;
-        border-radius:14px;
+        height:500px;
+    }
+
+    .seat{
+        font-size:8px;
     }
 }
-
-
-
