@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>수료식 배치도 조회</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-    <h1 class="title">수료식 배치도 조회</h1>
+    <h1 class="title">
+        🎓 수료식 배치도
+    </h1>
 
-    <div class="search-box">
+    <p class="subtitle">
+        훈련병 이름과 전화번호를 입력해주세요
+    </p>
+
+    <div class="search-card">
 
         <select id="company">
             <option value="">중대 선택 (선택사항)</option>
@@ -22,50 +29,57 @@
             <option value="12">12중대</option>
         </select>
 
-        <input type="text" id="nameInput" placeholder="훈련병 이름">
-        <input type="text" id="phoneInput" placeholder="전화번호">
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="훈련병 이름">
 
-        <button id="searchBtn">🔍 검색하기</button>
+        <input
+            type="text"
+            id="phoneInput"
+            placeholder="전화번호">
+
+        <button id="searchBtn">
+            조회하기
+        </button>
 
     </div>
 
-    <div class="result">
+    <div class="result-card">
 
-        <div class="result-header">
-            📍 검색 결과
+        <div class="result-title">
+            조회 결과
         </div>
 
         <div class="result-body">
-            이름과 전화번호를 입력 후 검색하세요.
+            이름과 전화번호를 입력해주세요.
         </div>
 
     </div>
 
-    <div class="stage-container">
-        <div class="stage-label">
-            단상
-        </div>
+    <div class="stage">
+        단상
     </div>
 
     <div class="company-layout">
 
         <div class="company-wrapper" id="wrapper12">
-            <h3>12중대</h3>
+            <div class="company-name">12중대</div>
             <div class="company-box" id="company12"></div>
         </div>
 
         <div class="company-wrapper" id="wrapper11">
-            <h3>11중대</h3>
+            <div class="company-name">11중대</div>
             <div class="company-box" id="company11"></div>
         </div>
 
         <div class="company-wrapper" id="wrapper10">
-            <h3>10중대</h3>
+            <div class="company-name">10중대</div>
             <div class="company-box" id="company10"></div>
         </div>
 
         <div class="company-wrapper" id="wrapper9">
-            <h3>9중대</h3>
+            <div class="company-name">9중대</div>
             <div class="company-box" id="company9"></div>
         </div>
 
