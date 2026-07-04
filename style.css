@@ -163,10 +163,10 @@ button:hover{
 
 .company-box{
 
-    height:360px;
+    height:280px;
 
     background:#EDEDE9;
-    
+
     border:1px solid #EDEDE9;
 
     border-radius:12px;
@@ -182,7 +182,7 @@ button:hover{
 
     .company-box{
 
-        height:100px;
+        height: 280px;;
     }
 
     .company-box h3{
