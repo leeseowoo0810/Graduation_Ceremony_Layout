@@ -104,6 +104,8 @@ button:hover{
     padding:12px 15px;
 
     font-weight:700;
+
+    font-style:bold;
 }
 
 .result-body{
@@ -112,7 +114,9 @@ button:hover{
 
     line-height:1.8;
 
-    font-size:16px;
+    font-size:20px;
+
+    text-align:center;
 }
 
 /* 단상 */
@@ -198,3 +202,19 @@ button:hover{
         font-size:24px;
     }
 }
+.active-company{
+
+
+    border:3px solid #6CFD33;
+
+
+    background:#808080;
+
+
+    box-shadow:
+        0 0 12px rgba(108, 253, 51, 0.8);
+
+
+    transition:.2s;
+}
+
