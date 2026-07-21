@@ -10,28 +10,28 @@
       "company": "9",
       "number": "001",
       "name": "이승우",
-      "phone": "01058361215",
+      "birth": "050810",
       "position": "2-7"
     },
     {
       "company": "10",
       "number": "194",
       "name": "구권모",
-      "phone": "01012345678",
+      "birth": "9910102",
       "position": "3-5"
     },
     {
       "company": "11",
       "number": "088",
       "name": "서필산",
-      "phone": "010123456789",
+      "birth": "990121",
       "position": "1-10"
     },
     {
       "company": "12",
       "number": "104",
       "name": "허찬",
-      "phone": "010123456789",
+      "birth": "970521",
       "position": "4-2"
     }
   ]
