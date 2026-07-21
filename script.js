@@ -23,10 +23,10 @@ const fallbackData = {
         "12": { columns: 4,  lines: 14 }
     },
     soldiers: [
-        { company: "9",  number: "001", name: "이승우", phone: "123", position: "2-7"  },
-        { company: "10", number: "015", name: "김민재", phone: "456", position: "3-5"  },
-        { company: "11", number: "088", name: "손흥민", phone: "789", position: "1-10" },
-        { company: "12", number: "104", name: "황희찬", phone: "012", position: "4-2"  }
+        { company: "9",  number: "001", name: "이승우", birth: "123", position: "2-7"  },
+        { company: "10", number: "015", name: "김민재", birth: "456", position: "3-5"  },
+        { company: "11", number: "088", name: "손흥민", birth: "789", position: "1-10" },
+        { company: "12", number: "104", name: "황희찬", birth: "012", position: "4-2"  }
     ]
 };
 
@@ -34,15 +34,14 @@ const fallbackData = {
 const DOM = {
     companySelect: null,
     nameInput: null,
-    phoneInput: null,
+    birthInput: null,
     searchBtn: null,
     backBtn: null,
     resultCard: null,
     resultBody: null,
     selectionView: null,
     detailView: null,
-    activeTitle: null,
-    companyWrappers: {}
+    activeTitle: null
 };
 
 // 페이지 로드 시 라이프사이클 시작
@@ -52,12 +51,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * 자주 사용되는 DOM 엘리먼트들을 미리 캐싱
+ * 주요 DOM 엘리먼트들을 미리 캐싱
  */
 function cacheDOMElements() {
     DOM.companySelect  = document.getElementById("company");
     DOM.nameInput      = document.getElementById("nameInput");
-    DOM.phoneInput     = document.getElementById("phoneInput");
+    DOM.birthInput     = document.getElementById("birthInput");
     DOM.searchBtn      = document.getElementById("searchBtn");
     DOM.backBtn        = document.getElementById("backBtn");
     DOM.resultCard     = document.getElementById("resultCard");
@@ -65,35 +64,25 @@ function cacheDOMElements() {
     DOM.selectionView  = document.getElementById("selectionView");
     DOM.detailView     = document.getElementById("detailView");
     DOM.activeTitle    = document.getElementById("activeTitle");
-
-    for (let c = 9; c <= 12; c++) {
-        DOM.companyWrappers[c] = document.getElementById("wrapper" + c);
-    }
 }
 
 /**
  * data.json을 fetch로 읽어옵니다.
- * - response.ok가 false(404 등)이면 명시적으로 에러를 던집니다.
- * - fetch 자체가 실패하거나(로컬 file:// CORS 등) 파싱 오류 시 fallbackData를 사용합니다.
+ * - 실패 시 fallbackData로 자동 대체
  */
 async function loadDatabase() {
     try {
         const response = await fetch("./data.json");
-
-        // ★ 핵심 수정: HTTP 상태 코드 체크 (404, 500 등 모두 잡아냄)
         if (!response.ok) {
             throw new Error(`data.json 로드 실패 (HTTP ${response.status})`);
         }
-
         data = await response.json();
         console.log("✅ data.json 로드 성공:", data);
-
     } catch (error) {
         console.warn("⚠️ data.json 로드 실패, fallbackData를 사용합니다:", error.message);
         data = fallbackData;
     }
 
-    // 성공/실패 무관하게 항상 실행
     if (data && data.layout) {
         createLayouts();
         initEventListeners();
@@ -103,21 +92,43 @@ async function loadDatabase() {
 }
 
 /**
- * 각 중대의 그리드 배치도 생성 (DocumentFragment로 성능 최적화)
+ * 각 중대의 그리드 배치도 생성 (data.layout 데이터 기반 완전히 동적 생성)
  */
 function createLayouts() {
-    for (const company in data.layout) {
-        const companyBox = document.getElementById("company" + company);
-        if (!companyBox) continue;
+    const layoutContainer = document.getElementById("companyLayout");
+    if (!layoutContainer) return;
+    
+    layoutContainer.innerHTML = ""; // 기존 마크업 초기화
+    
+    // 리플로우 방지를 위한 전체 컨테이너 Fragment
+    const layoutFragment = document.createDocumentFragment();
 
+    for (const company in data.layout) {
         const { columns, lines } = data.layout[company];
 
-        // CSS Grid 열 비율 적용
+        // 1. 개별 중대 wrapper 생성 (시각적 격리를 위해 고유 테마 클래스 추가)
+        const wrapper = document.createElement("div");
+        wrapper.className = `company-wrapper company-${company}`;
+        wrapper.id = `wrapper${company}`;
+        wrapper.style.display = "none"; // 기본 비활성화
+
+        // 2. 중대 영역 헤더 타이틀 생성
+        const headerEl = document.createElement("div");
+        headerEl.className = "company-card-header";
+        headerEl.innerHTML = `
+            <span class="company-card-badge">${company}중대</span>
+            <span class="company-card-subtitle">${columns}열 × ${lines}행 배치구역</span>
+        `;
+        wrapper.appendChild(headerEl);
+
+        // 3. 배치도 그리드 박스 생성
+        const companyBox = document.createElement("div");
+        companyBox.className = "company-box";
+        companyBox.id = `company${company}`;
         companyBox.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
 
-        // 리플로우 방지를 위한 DocumentFragment 생성
-        const fragment = document.createDocumentFragment();
-
+        // 4. 개별 좌석 생성 및 Fragment 추가
+        const seatFragment = document.createDocumentFragment();
         for (let line = 1; line <= lines; line++) {
             for (let column = 1; column <= columns; column++) {
                 const seat = document.createElement("div");
@@ -125,41 +136,45 @@ function createLayouts() {
                 seat.dataset.company = company;
                 seat.dataset.position = `${column}-${line}`;
                 seat.textContent = `${column}-${line}`;
-                fragment.appendChild(seat);
+                seatFragment.appendChild(seat);
             }
         }
-        companyBox.appendChild(fragment);
+        
+        companyBox.appendChild(seatFragment);
+        wrapper.appendChild(companyBox);
+        layoutFragment.appendChild(wrapper);
     }
+    
+    layoutContainer.appendChild(layoutFragment);
 }
 
 /**
  * 이벤트 리스너 등록
  */
 function initEventListeners() {
-    // 중대 선택 버튼 클릭 시 해당 중대 확장
+    // 중대 선택 버튼 클릭 시 해당 중대 상세 전환
     document.querySelectorAll(".comp-select-btn").forEach(button => {
         button.addEventListener("click", () => {
             showCompany(button.dataset.target);
         });
     });
 
-    // 이전으로 돌아가기 버튼 클릭
     DOM.backBtn.addEventListener("click", showSelectionView);
-
-    // 검색 클릭
     DOM.searchBtn.addEventListener("click", searchPerson);
 
-    // 엔터키 입력 시 검색 연동
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            const activeId = document.activeElement.id;
-            if (["nameInput", "phoneInput", "company"].includes(activeId)) {
-                searchPerson();
-            }
+    // 인풋 엔터키 검색 바인딩
+    const inputs = [DOM.nameInput, DOM.birthInput, DOM.companySelect];
+    inputs.forEach(input => {
+        if (input) {
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    searchPerson();
+                }
+            });
         }
     });
 
-    // 드롭다운 변경 시 해당 중대 버튼 강조 표시 (화면 전환 없음)
+    // 드롭다운 선택 변경 시 메인화면 버튼 고유 하이라이트 동기화
     DOM.companySelect.addEventListener("change", function () {
         document.querySelectorAll(".comp-select-btn").forEach(btn => {
             btn.classList.remove("highlighted");
@@ -183,11 +198,10 @@ function showCompany(company) {
     DOM.detailView.style.display = "block";
     DOM.activeTitle.textContent = `${company}중대 배치도`;
 
-    for (const c in DOM.companyWrappers) {
-        if (DOM.companyWrappers[c]) {
-            DOM.companyWrappers[c].style.display = (c === company) ? "block" : "none";
-        }
-    }
+    // 모든 중대 wrapper를 순회하여 타겟만 표시 (완전 동적 제어)
+    document.querySelectorAll(".company-wrapper").forEach(wrapper => {
+        wrapper.style.display = (wrapper.id === `wrapper${company}`) ? "block" : "none";
+    });
 }
 
 /**
@@ -200,7 +214,7 @@ function showSelectionView() {
     DOM.detailView.style.display = "none";
     DOM.selectionView.style.display = "block";
     DOM.resultCard.style.display = "none";
-    DOM.resultBody.innerHTML = "이름과 전화번호를 입력해주세요.";
+    DOM.resultBody.innerHTML = "이름과 생년월일을 입력해주세요.";
 }
 
 /**
@@ -216,15 +230,15 @@ function clearHighlights() {
 }
 
 /**
- * 훈련병 검색 로직 및 스크롤 포커싱
+ * 훈련병 검색 로직 및 포커싱 스크롤
  */
 function searchPerson() {
     const company = DOM.companySelect.value;
     const name    = DOM.nameInput.value.trim();
-    const phone   = DOM.phoneInput.value.trim();
+    const birth   = DOM.birthInput.value.trim();
 
-    if (!name || !phone) {
-        showError("이름과 전화번호를 모두 입력해 주세요.");
+    if (!name || !birth) {
+        showError("이름과 생년월일을 모두 입력해 주세요.");
         return;
     }
 
@@ -232,20 +246,18 @@ function searchPerson() {
 
     const found = data.soldiers.find(s => {
         const companyMatch = !company || s.company === company;
-        return companyMatch && s.name === name && s.phone === phone;
+        return companyMatch && s.name === name && s.birth === birth;
     });
 
     DOM.resultCard.style.display = "block";
 
     if (!found) {
         DOM.resultBody.innerHTML = `
-        <div style="text-align: center; padding: 10px 0;">
-            <div style="font-size: 17px; font-weight: 700; color: #f87171; margin-bottom: 8px;">
-                일치하는 정보가 없습니다.
-            </div>
-            <div style="font-size: 13.5px; color: #9ca3af; line-height: 1.6;">
+        <div class="no-result">
+            <div class="no-result-title">일치하는 정보가 없습니다.</div>
+            <div class="no-result-desc">
                 중대를 모르시는 경우에는 메인 화면으로 돌아가<br>
-                <strong style="color: #f3f4f6;">중대 선택 없이 이름과 전화번호만</strong> 입력 후 조회해 보세요.
+                <strong>중대 선택 없이 이름과 생년월일만</strong> 입력 후 다시 조회해 보세요.
             </div>
         </div>
         `;
@@ -253,7 +265,7 @@ function searchPerson() {
     }
 
     DOM.resultBody.innerHTML = `
-    <div class="result-details">
+    <div class="result-details theme-${found.company}">
         <div class="result-name">${found.name}</div>
         <div class="result-meta">${found.company}중대 · 교번 ${found.number}</div>
         <div class="result-location">📍 위치 : ${found.position}</div>
@@ -270,17 +282,17 @@ function searchPerson() {
         seat.classList.add("selected-seat");
         setTimeout(() => {
             seat.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 120);
+        }, 150);
     }
 }
 
 /**
- * 에러 메시지 팝업 출력 보조 함수
+ * 에러 메시지 팝업 출력
  */
 function showError(msg) {
     DOM.resultCard.style.display = "block";
     DOM.resultBody.innerHTML = `
-    <div style="color: #f87171; font-weight: 600; text-align: center; padding: 5px 0;">
+    <div class="error-msg">
         ⚠️ ${msg}
     </div>`;
 }
